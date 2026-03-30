@@ -12,21 +12,21 @@ const LANG: ILang = {
 		lng: 'en',
 		icon: 'CustomUsa',
 	},
-	DE: {
-		text: 'Deutsche',
-		lng: 'de',
-		icon: 'CustomGermany',
-	},
-	FR: {
-		text: 'Français',
-		lng: 'fr',
-		icon: 'CustomFrance',
-	},
-	TR: {
-		text: 'Türkçe',
-		lng: 'tr',
-		icon: 'CustomTurkey',
-	},
+	// DE: {
+	// 	text: 'Deutsche',
+	// 	lng: 'de',
+	// 	icon: 'CustomGermany',
+	// },
+	// FR: {
+	// 	text: 'Français',
+	// 	lng: 'fr',
+	// 	icon: 'CustomFrance',
+	// },
+	// TR: {
+	// 	text: 'Türkçe',
+	// 	lng: 'tr',
+	// 	icon: 'CustomTurkey',
+	// },
 };
 
 export const getLangWithKey = (key: ILang['key']['lng']): ILang['key'] => {

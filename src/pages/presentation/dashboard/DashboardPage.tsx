@@ -84,7 +84,7 @@ const DashboardPage = () => {
 		{
 			title: 'House Wallet Balance',
 			value: '$12,780',
-			color: 'dark',
+			color: 'secondary',
 		},
 		{
 			title: "Today's Rake (USDT)",
@@ -100,9 +100,6 @@ const DashboardPage = () => {
 					<b>Dashboard Overview</b>
 					<SubheaderSeparator />
 				</SubHeaderLeft>
-				<SubHeaderRight>
-					<span>Real-time Metrics</span>
-				</SubHeaderRight>
 			</SubHeader>
 
 			<Page>

@@ -147,7 +147,7 @@ const DashboardHeader = () => {
 	const { darkModeStatus, setDarkModeStatus } = useDarkMode();
 	const { i18n } = useTranslation();
 
-	const [searchTerm, setSearchTerm] = useState('');
+	// const [searchTerm, setSearchTerm] = useState('');
 
 	const styledBtn: IButtonProps = {
 		color: darkModeStatus ? 'dark' : 'light',
@@ -168,12 +168,12 @@ const DashboardHeader = () => {
 		);
 	};
 
-	// Search handler
-	const handleSearch = () => {
-		console.log('Searching for:', searchTerm);
+	// // Search handler
+	// const handleSearch = () => {
+	// 	console.log('Searching for:', searchTerm);
 
-		// 👉 Replace this with API call or filter logic
-	};
+	// 	// 👉 Replace this with API call or filter logic
+	// };
 
 	useLayoutEffect(() => {
 		document.documentElement.setAttribute('lang', i18n.language);
@@ -184,7 +184,7 @@ const DashboardHeader = () => {
 			<HeaderLeft>
 				{/* 🔍 SEARCH BAR */}
 				<div className='d-flex align-items-center'>
-					<div className='position-relative'>
+					{/* <div className='position-relative'>
 						<input
 							type='text'
 							placeholder='Search...'
@@ -205,15 +205,15 @@ const DashboardHeader = () => {
 							}}>
 							<Icon icon='Search' />
 						</span>
-					</div>
+					</div> */}
 
-					<Button
+					{/* <Button
 						className='ms-2'
 						onClick={handleSearch}
 						color='primary'
 						icon='Search'>
 						Search
-					</Button>
+					</Button> */}
 				</div>
 			</HeaderLeft>
 
@@ -221,21 +221,23 @@ const DashboardHeader = () => {
 				<div className='row g-3 align-items-center'>
 
 					{/* 🌙 Dark Mode */}
-					<div className='col-auto'>
-						<Popovers trigger='hover' desc='Dark / Light mode'>
-							<Button
-								{...styledBtn}
-								onClick={() => setDarkModeStatus(!darkModeStatus)}
-								className='btn-only-icon'
-								aria-label='Toggle dark mode'>
-								<Icon
-									icon={darkModeStatus ? 'DarkMode' : 'LightMode'}
-									color={darkModeStatus ? 'info' : 'warning'}
-									className='btn-icon'
-								/>
-							</Button>
-						</Popovers>
-					</div>
+						{/* <div className='col-auto'>
+							<Popovers trigger='hover' desc='Dark mode'>
+								<Button
+									{...styledBtn}
+									// onClick={() => setDarkModeStatus(!darkModeStatus)}
+									onClick={() => setDarkModeStatus(true)}
+									className='btn-only-icon'
+									aria-label='Toggle dark mode'>
+									<Icon
+										icon={darkModeStatus ? 'DarkMode' : 'LightMode'}
+										// color={darkModeStatus ? 'info' : 'warning'}
+										color='info'
+										className='btn-icon'
+									/>
+								</Button>
+							</Popovers>
+						</div> */}
 
 					{/* 🌐 Language Selector */}
 					<div className='col-auto'>

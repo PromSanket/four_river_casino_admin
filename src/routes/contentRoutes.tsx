@@ -3,6 +3,9 @@ import { dashboardPagesMenu, demoPagesMenu, pageLayoutTypesPagesMenu } from '../
 import Login from '../pages/presentation/auth/Login';
 import WithdrawalManagementPage from '../pages/presentation/withdrawal/WithdrawalManagementPage';
 import PlayerManagement from '../pages/presentation/playerManagement/playerManagement';
+import AffiliateManagement from '../pages/presentation/affilateManagement/affilateManagement';
+import SettingsPage from '../pages/presentation/setting/setting';
+import TelegramBot from '../pages/presentation/telegram/telegramBot';
 
 const LANDING = {
 	DASHBOARD: lazy(() => import('../pages/presentation/dashboard/DashboardPage')),
@@ -37,52 +40,78 @@ const presentation = [
 		element:<PlayerManagement />
 	},
 	{
-		path: demoPagesMenu.page404.path,
-		element: <AUTH.PAGE_404 />,
+		path:'/affilate-management',
+		element:<AffiliateManagement />
 	},
 	{
-		path: demoPagesMenu.login.path,
+		path: '/login',
 		element: <Login />,
 	},
 	{
-		path: demoPagesMenu.signUp.path,
+		path: '/sign-up',
 		element: <Login isSignUp />,
 	},
+	{
+		path:'/setting',
+		element:<SettingsPage />
+	},
+	{
+		path:'/telegram-bot',
+		element:<TelegramBot />
+	}
+	// {
+	// 	path: demoPagesMenu.page404.path,
+	// 	element: <AUTH.PAGE_404 />,
+	// },
+	// {
+	// 	path: demoPagesMenu.login.path,
+	// 	element: <Login />,
+	// },
+	// {
+	// 	path: demoPagesMenu.signUp.path,
+	// 	element: <Login isSignUp />,
+	// },
 
-	/** ************************************************** */
+	// /** ************************************************** */
 
-	/**
-	 * 
-	 */
-	{
-		path: pageLayoutTypesPagesMenu.blank.path,
-		element: <PAGE_LAYOUTS.BLANK />,
-	},
-	{
-		path: pageLayoutTypesPagesMenu.pageLayout.subMenu.headerAndSubheader.path,
-		element: <PAGE_LAYOUTS.HEADER_SUBHEADER />,
-	},
-	{
-		path: pageLayoutTypesPagesMenu.pageLayout.subMenu.onlyHeader.path,
-		element: <PAGE_LAYOUTS.HEADER />,
-	},
-	{
-		path: pageLayoutTypesPagesMenu.pageLayout.subMenu.onlySubheader.path,
-		element: <PAGE_LAYOUTS.SUBHEADER />,
-	},
-	{
-		path: pageLayoutTypesPagesMenu.pageLayout.subMenu.onlyContent.path,
-		element: <PAGE_LAYOUTS.CONTENT />,
-	},
-	{
-		path: pageLayoutTypesPagesMenu.asideTypes.subMenu.defaultAside.path,
-		element: <PAGE_LAYOUTS.ASIDE />,
-	},
-	{
-		path: pageLayoutTypesPagesMenu.asideTypes.subMenu.minimizeAside.path,
-		element: <PAGE_LAYOUTS.MINIMIZE_ASIDE />,
-	},
+	// /**
+	//  * 
+	//  */
+	// {
+	// 	path: pageLayoutTypesPagesMenu.blank.path,
+	// 	element: <PAGE_LAYOUTS.BLANK />,
+	// },
+	// {
+	// 	path: pageLayoutTypesPagesMenu.pageLayout.subMenu.headerAndSubheader.path,
+	// 	element: <PAGE_LAYOUTS.HEADER_SUBHEADER />,
+	// },
+	// {
+	// 	path: pageLayoutTypesPagesMenu.pageLayout.subMenu.onlyHeader.path,
+	// 	element: <PAGE_LAYOUTS.HEADER />,
+	// },
+	// {
+	// 	path: pageLayoutTypesPagesMenu.pageLayout.subMenu.onlySubheader.path,
+	// 	element: <PAGE_LAYOUTS.SUBHEADER />,
+	// },
+	// {
+	// 	path: pageLayoutTypesPagesMenu.pageLayout.subMenu.onlyContent.path,
+	// 	element: <PAGE_LAYOUTS.CONTENT />,
+	// },
+	// {
+	// 	path: pageLayoutTypesPagesMenu.asideTypes.subMenu.defaultAside.path,
+	// 	element: <PAGE_LAYOUTS.ASIDE />,
+	// },
+	// {
+	// 	path: pageLayoutTypesPagesMenu.asideTypes.subMenu.minimizeAside.path,
+	// 	element: <PAGE_LAYOUTS.MINIMIZE_ASIDE />,
+	// },
 ];
 const contents = [...presentation];
+
+const menu = {
+  ...dashboardPagesMenu,
+  ...demoPagesMenu,
+  ...pageLayoutTypesPagesMenu
+}
 
 export default contents;

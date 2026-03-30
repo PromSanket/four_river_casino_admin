@@ -1,12 +1,11 @@
 import React from 'react';
 import PageWrapper from '../../../layout/PageWrapper/PageWrapper';
 import Page from '../../../layout/Page/Page';
-import { pageLayoutTypesPagesMenu } from '../../../menu';
 import Popovers from '../../../components/bootstrap/Popovers';
 
 const Blank = () => {
 	return (
-		<PageWrapper title={pageLayoutTypesPagesMenu.blank.text}>
+		<PageWrapper title='Blank Page'>
 			<Page>
 				<div className='row d-flex align-items-center h-100'>
 					<div

@@ -43,66 +43,21 @@ const User = () => {
 				</div>
 				<div className='user-info'>
 					<div className='user-name'>
-						<Popovers title='User.tsx' desc={<code>src/layout/User/User.tsx</code>}>
+						<Popovers>
 							{`${userData?.name} ${userData?.surname}`}
 						</Popovers>
-						<code className='ps-2'>User.tsx</code>
+						{/* <code className='ps-2'>User.tsx</code> */}
 					</div>
 					<div className='user-sub-title'>
-						<Popovers title='User.tsx' desc={<code>src/layout/User/User.tsx</code>}>
+						<Popovers>
 							User
 						</Popovers>
-						<code className='ps-2'>User.tsx</code>
+						{/* <code className='ps-2'>User.tsx</code> */}
 					</div>
 				</div>
 			</div>
 
 			<Collapse isOpen={collapseStatus} className='user-menu'>
-				<nav aria-label='aside-bottom-user-menu'>
-					<div className='navigation'>
-						<div
-							role='presentation'
-							className='navigation-item cursor-pointer'
-							onClick={() =>
-								navigate(
-									`/`,
-									// @ts-ignore
-									handleItem(),
-								)
-							}>
-							<span className='navigation-link navigation-link-pill'>
-								<span className='navigation-link-info'>
-									<Icon icon='AccountBox' className='navigation-icon' />
-									<span className='navigation-text'>
-										{t('menu:Profile') as ReactNode}
-									</span>
-								</span>
-							</span>
-						</div>
-						<div
-							role='presentation'
-							className='navigation-item cursor-pointer'
-							onClick={() => {
-								setDarkModeStatus(!darkModeStatus);
-								handleItem();
-							}}>
-							<span className='navigation-link navigation-link-pill'>
-								<span className='navigation-link-info'>
-									<Icon
-										icon={darkModeStatus ? 'DarkMode' : 'LightMode'}
-										color={darkModeStatus ? 'info' : 'warning'}
-										className='navigation-icon'
-									/>
-									<span className='navigation-text'>
-										{darkModeStatus
-											? (t('menu:DarkMode') as ReactNode)
-											: (t('menu:LightMode') as ReactNode)}
-									</span>
-								</span>
-							</span>
-						</div>
-					</div>
-				</nav>
 				<NavigationLine />
 				<nav aria-label='aside-bottom-user-menu-2'>
 					<div className='navigation'>
@@ -116,7 +71,8 @@ const User = () => {
 								if (width < Number(process.env.REACT_APP_MOBILE_BREAKPOINT_SIZE)) {
 									setAsideStatus(false);
 								}
-								navigate(`../${demoPagesMenu.login.path}`);
+								// navigate(`../${demoPagesMenu.login.path}`);
+								navigate('/login');
 							}}>
 							<span className='navigation-link navigation-link-pill'>
 								<span className='navigation-link-info'>

@@ -1,4 +1,4 @@
-import React, { FC, useCallback, useContext, useState } from 'react';
+import React, { FC, startTransition, useCallback, useContext, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
@@ -58,7 +58,9 @@ const Login: FC<ILoginProps> = ({ isSignUp }) => {
 	};
 
 	const passwordCheck = (username: string, password: string) => {
-		return getUserDataWithUsername(username).password === password;
+		// return getUserDataWithUsername(username).password === password;
+		const user = getUserDataWithUsername(username);
+		return user && user.password === password;
 	};
 
 	const formik = useFormik({
@@ -82,13 +84,17 @@ const Login: FC<ILoginProps> = ({ isSignUp }) => {
 		},
 		validateOnChange: false,
 		onSubmit: (values) => {
+			console.log('LOGIN CLICKED');
 			if (usernameCheck(values.loginUsername)) {
 				if (passwordCheck(values.loginUsername, values.loginPassword)) {
 					if (setUser) {
 						setUser(values.loginUsername);
 					}
-
-					handleOnClick();
+					console.log("Navigating to dashboard...");
+					// handleOnClick();
+					startTransition(() => {
+						navigate('/');
+					});
 				} else {
 					formik.setFieldError('loginPassword', 'Username and password do not match.');
 				}

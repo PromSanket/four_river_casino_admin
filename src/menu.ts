@@ -51,99 +51,150 @@ export const dashboardPagesMenu = {
 		path: '/withdrawal-management',
 		icon: 'Money',
 		subMenu: null,
+	},
+	affilateManagement:{
+		id:'affilateManagement',
+		text:'Affilate Management',
+		path:'/affilate-management',
+		icon:'Groups',
+		subMenu: null,
+	},
+	setting:{
+		id:'setting',
+		text:'Setting',
+		path:'/setting',
+		icon:'AdminPanelSettings',
+		subMenu: null,
+	},
+	telegramBot:{
+		id:'telegramBot',
+		text:'Telegram Bot',
+		path:'/telegram-bot',
+		icon:'Storm',
+		subMenu: null,
 	}
 };
 
+// export const demoPagesMenu = {
+// 	auth: {
+// 		id: 'auth',
+// 		text: 'Auth Pages',
+// 		icon: 'Extension',
+// 	},
+// 	login: {
+// 		id: 'login',
+// 		text: 'Login',
+// 		path: 'auth-pages/login',
+// 		icon: 'Login',
+// 	},
+// 	signUp: {
+// 		id: 'signUp',
+// 		text: 'Sign Up',
+// 		path: 'auth-pages/sign-up',
+// 		icon: 'PersonAdd',
+// 	},
+// 	page404: {
+// 		id: 'Page404',
+// 		text: '404 Page',
+// 		path: 'auth-pages/404',
+// 		icon: 'ReportGmailerrorred',
+// 	},
+// };
+
+// export const pageLayoutTypesPagesMenu = {
+// 	layoutTypes: {
+// 		id: 'layoutTypes',
+// 		text: '',
+// 	},
+// 	blank: {
+// 		id: 'blank',
+// 		text: 'Blank',
+// 		path: 'page-layouts/blank',
+// 		icon: 'check_box_outline_blank ',
+// 	},
+// 	pageLayout: {
+// 		id: 'pageLayout',
+// 		text: 'Page Layout',
+// 		path: 'page-layouts',
+// 		icon: 'BackupTable',
+// 		subMenu: {
+// 			headerAndSubheader: {
+// 				id: 'headerAndSubheader',
+// 				text: 'Header & Subheader',
+// 				path: 'page-layouts/header-and-subheader',
+// 				icon: 'ViewAgenda',
+// 			},
+// 			onlyHeader: {
+// 				id: 'onlyHeader',
+// 				text: 'Only Header',
+// 				path: 'page-layouts/only-header',
+// 				icon: 'ViewStream',
+// 			},
+// 			onlySubheader: {
+// 				id: 'onlySubheader',
+// 				text: 'Only Subheader',
+// 				path: 'page-layouts/only-subheader',
+// 				icon: 'ViewStream',
+// 			},
+// 			onlyContent: {
+// 				id: 'onlyContent',
+// 				text: 'Only Content',
+// 				path: 'page-layouts/only-content',
+// 				icon: 'WebAsset',
+// 			},
+// 		},
+// 	},
+// 	asideTypes: {
+// 		id: 'asideTypes',
+// 		text: 'Aside Types',
+// 		path: 'aside-types',
+// 		icon: 'Vertical Split',
+// 		subMenu: {
+// 			defaultAside: {
+// 				id: 'defaultAside',
+// 				text: 'Default Aside',
+// 				path: 'aside-types/default-aside',
+// 				icon: 'ViewQuilt',
+// 			},
+// 			minimizeAside: {
+// 				id: 'minimizeAside',
+// 				text: 'Minimize Aside',
+// 				path: 'aside-types/minimize-aside',
+// 				icon: 'View Compact',
+// 			},
+// 		},
+// 	},
+// };
+
 export const demoPagesMenu = {
-	auth: {
-		id: 'auth',
-		text: 'Auth Pages',
-		icon: 'Extension',
-	},
 	login: {
 		id: 'login',
 		text: 'Login',
-		path: 'auth-pages/login',
-		icon: 'Login',
+		path: '/login',
 	},
 	signUp: {
 		id: 'signUp',
 		text: 'Sign Up',
-		path: 'auth-pages/sign-up',
-		icon: 'PersonAdd',
+		path: '/auth-pages/sign-up',
 	},
 	page404: {
-		id: 'Page404',
-		text: '404 Page',
-		path: 'auth-pages/404',
-		icon: 'ReportGmailerrorred',
+		id: 'page404',
+		text: '404',
+		path: '/auth-pages/404',
 	},
 };
 
 export const pageLayoutTypesPagesMenu = {
-	layoutTypes: {
-		id: 'layoutTypes',
-		text: '',
-	},
-	blank: {
-		id: 'blank',
-		text: 'Blank',
-		path: 'page-layouts/blank',
-		icon: 'check_box_outline_blank ',
-	},
 	pageLayout: {
-		id: 'pageLayout',
-		text: 'Page Layout',
-		path: 'page-layouts',
-		icon: 'BackupTable',
 		subMenu: {
-			headerAndSubheader: {
-				id: 'headerAndSubheader',
-				text: 'Header & Subheader',
-				path: 'page-layouts/header-and-subheader',
-				icon: 'ViewAgenda',
-			},
-			onlyHeader: {
-				id: 'onlyHeader',
-				text: 'Only Header',
-				path: 'page-layouts/only-header',
-				icon: 'ViewStream',
-			},
 			onlySubheader: {
-				id: 'onlySubheader',
-				text: 'Only Subheader',
-				path: 'page-layouts/only-subheader',
-				icon: 'ViewStream',
-			},
-			onlyContent: {
-				id: 'onlyContent',
-				text: 'Only Content',
-				path: 'page-layouts/only-content',
-				icon: 'WebAsset',
+				path: '/page-layouts/only-subheader',
 			},
 		},
-	},
-	asideTypes: {
-		id: 'asideTypes',
-		text: 'Aside Types',
-		path: 'aside-types',
-		icon: 'Vertical Split',
-		subMenu: {
-			defaultAside: {
-				id: 'defaultAside',
-				text: 'Default Aside',
-				path: 'aside-types/default-aside',
-				icon: 'ViewQuilt',
-			},
-			minimizeAside: {
-				id: 'minimizeAside',
-				text: 'Minimize Aside',
-				path: 'aside-types/minimize-aside',
-				icon: 'View Compact',
-			},
-		},
-	},
+	}
 };
+
+
 
 export const productsExampleMenu = {
 	companyA: { id: 'companyA', text: 'Company A', path: 'grid-pages/products', subMenu: null },

@@ -231,7 +231,7 @@ interface INavigationProps {
 }
 
 const Navigation = forwardRef<HTMLElement, INavigationProps>(
-	({ menu, horizontal = false, id, className = '', ...props }, ref) => {
+	({ menu ={}, horizontal = false, id, className = '', ...props }, ref) => {
 		const [activeItem, setActiveItem] = useState<any>(undefined);
 		const { t } = useTranslation('menu');
 

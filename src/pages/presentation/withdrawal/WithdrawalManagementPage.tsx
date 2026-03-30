@@ -48,20 +48,9 @@ const WithdrawalManagementPage = () => {
 				<SubHeaderLeft>
 					<b>Withdrawal Management</b>
 				</SubHeaderLeft>
-				<SubHeaderRight>
-					<span>Admin Control Panel</span>
-				</SubHeaderRight>
 			</SubHeader>
 
 			<Page>
-				{/* SEARCH */}
-				<div className='card mb-3 p-3'>
-					<input
-						type='text'
-						className='form-control'
-						placeholder='Search...'
-					/>
-				</div>
 
 				{/* TABS */}
 				<div className='mb-3'>
