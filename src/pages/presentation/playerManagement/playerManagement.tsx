@@ -29,6 +29,9 @@ export default function PlayerManagement() {
 
 	const [showConfirmDialog, setShowConfirmDialog] = useState(false);
 
+	const [showToast, setShowToast] = useState(false);
+	const [toastMessage, setToastMessage] = useState('');
+
 	// ✅ Dummy Player List
 	const players = [
 		{
@@ -147,13 +150,36 @@ export default function PlayerManagement() {
 		setPendingAction(''); // Clear pending action when showing credit/debit confirmation
 	};
 
+	// const handleConfirm = () => {
+	// 	console.log('Action:', actionType, 'Amount:', amount, 'Reason:', reason);
+	// 	setShowConfirmModal(false);
+	// 	setActionType('');
+	// 	setReason('');
+	// 	setAmount('');
+	// 	setPendingAction(''); // Clear pending action after credit/debit confirmation
+	// };
+
 	const handleConfirm = () => {
 		console.log('Action:', actionType, 'Amount:', amount, 'Reason:', reason);
+
 		setShowConfirmModal(false);
+
+		// ✅ Toast message
+		setToastMessage(
+			actionType === 'credit'
+				? 'Credit successfully completed'
+				: 'Debit successfully completed'
+		);
+		setShowToast(true);
+
+		// reset
 		setActionType('');
 		setReason('');
 		setAmount('');
-		setPendingAction(''); // Clear pending action after credit/debit confirmation
+
+		setTimeout(() => {
+			setShowToast(false);
+		}, 3000);
 	};
 
 	const handleDeleteConfirm = () => {
@@ -224,7 +250,7 @@ export default function PlayerManagement() {
 								}}>
 								<thead>
 									<tr style={{ background: '#2a2d33' }}>
-										<th className='py-3'>Full Name</th>
+										<th className='py-3 justify-con'>Full Name</th>
 										<th>Telegram</th>
 										<th>Email</th>
 										<th>DOB</th>
@@ -313,11 +339,11 @@ export default function PlayerManagement() {
 										className="rounded-circle mb-2"
 										width="80"
 									/>
-									<h5>{selectedPlayer.fullName}</h5>
+									<h5 className='text-start'>{selectedPlayer.fullName}</h5>
 
-									<span className={`badge ${selectedPlayer.status === 'Active' ? 'bg-success' : 'bg-secondary'}`}>
+									{/* <span className={`badge ${selectedPlayer.status === 'Active' ? 'bg-success' : 'bg-secondary'}`}>
 										{selectedPlayer.status}
-									</span>
+									</span> */}
 
 									<div className="mt-3 text-start">
 										<p><b>ID:</b> {selectedPlayer.id}</p>
@@ -531,12 +557,12 @@ export default function PlayerManagement() {
 
 								<div className="row mb-3">
 									<div className="col-md-6">
-										<label>Amount ($)</label>
+										<label className="mb-2">Amount ($)</label>
 										<input className="form-control" placeholder="0.00" />
 									</div>
 
 									<div className="col-md-6">
-										<label>Wallet Type</label>
+										<label className="mb-2">Wallet Type</label>
 										<select className="form-control">
 											<option>Main Wallet</option>
 										</select>
@@ -544,7 +570,7 @@ export default function PlayerManagement() {
 								</div>
 
 								<div className="mb-3">
-									<label>Reason (Required)</label>
+									<label className="mb-2">Reason (Required)</label>
 									<textarea
 										className="form-control"
 										placeholder="Enter detailed reason for this adjustment..."
@@ -608,13 +634,12 @@ export default function PlayerManagement() {
 								</div>
 
 								<div className="modal-body">
-									<p>Are you sure you want to <b>{actionType}</b> this player?</p>
 									<p>Current Balance: {selectedPlayer?.balance}</p>
 
 									{(actionType === 'credit' || actionType === 'debit') && (
 										<div>
 											<div className="mb-3">
-												<label>Amount ($)</label>
+												<label className="mb-2">Amount ($)</label>
 												<input
 													type="number"
 													className="form-control"
@@ -624,7 +649,7 @@ export default function PlayerManagement() {
 												/>
 											</div>
 											<div>
-												<label>Enter Reason</label>
+												<label className="mb-2">Enter Reason</label>
 												<textarea
 													className="form-control"
 													value={reason}
@@ -636,8 +661,8 @@ export default function PlayerManagement() {
 								</div>
 
 								<div className="modal-footer">
-									<button className="btn btn-secondary" onClick={() => setShowModal(false)}>No</button>
-									<button className="btn btn-primary" onClick={handleModalConfirm}>Yes</button>
+									{/* <button className="btn btn-secondary" onClick={() => setShowModal(false)}>No</button> */}
+									<button className="btn btn-primary" onClick={handleModalConfirm}>Submit</button>
 								</div>
 
 							</div>
@@ -656,16 +681,34 @@ export default function PlayerManagement() {
 									<button className="btn-close" onClick={() => setShowConfirmModal(false)}></button>
 								</div>
 
-								<div className="modal-body">
-									<p>Are you sure you want to {actionType} this player?</p>
+								{/* <div className="modal-body">
 									<p>Current Balance: {selectedPlayer?.balance}</p>
 									<p>Amount: ${amount}</p>
 									<p>Reason: {reason}</p>
+								</div> */}
+								<div className="modal-body text-center">
+									<p className="fs-5">
+										Are you sure you want to {actionType} this player?
+									</p>
 								</div>
 
-								<div className="modal-footer">
-									<button className="btn btn-secondary" onClick={() => setShowConfirmModal(false)}>No</button>
-									<button className="btn btn-primary" onClick={handleConfirm}>Yes</button>
+								{/* <div className="modal-footer">
+									<button className="btn btn-primary" onClick={handleConfirm}>Submit</button>
+								</div> */}
+								<div className="modal-footer justify-content-center">
+									<button
+										className="btn btn-secondary"
+										onClick={() => setShowConfirmModal(false)}
+									>
+										No
+									</button>
+
+									<button
+										className={`btn ${actionType === 'credit' ? 'btn-success' : 'btn-danger'}`}
+										onClick={handleConfirm}
+									>
+										Yes
+									</button>
 								</div>
 
 							</div>
@@ -768,6 +811,26 @@ export default function PlayerManagement() {
 									</button>
 								</div>
 
+							</div>
+						</div>
+					</div>
+				)}
+
+				{showToast && (
+					<div
+						className="position-fixed bottom-0 end-0 p-3"
+						style={{ zIndex: 9999 }}
+					>
+						<div className="toast show align-items-center text-bg-success border-0">
+							<div className="d-flex">
+								<div className="toast-body">
+									{toastMessage || 'Successfully completed'}
+								</div>
+								<button
+									type="button"
+									className="btn-close btn-close-white me-2 m-auto"
+									onClick={() => setShowToast(false)}
+								></button>
 							</div>
 						</div>
 					</div>

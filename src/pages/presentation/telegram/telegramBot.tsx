@@ -285,6 +285,33 @@ const TelegramBot = () => {
         .rbc-calendar {
           z-index: 0 !important;
         }
+
+        /* Navigation buttons (Today, Back, Next) */
+        .rbc-toolbar button {
+          color: white !important;
+          background-color: #333 !important;
+          border: 1px solid #555 !important;
+        }
+
+        .rbc-toolbar button:hover {
+          background-color: #555 !important;
+        }
+
+        /* View switcher (Month, Week, Day) */
+        .rbc-toolbar .rbc-btn-group button {
+          color: white !important;
+          background-color: #333 !important;
+          border: 1px solid #555 !important;
+        }
+
+        .rbc-toolbar .rbc-btn-group button:hover {
+          background-color: #555 !important;
+        }
+
+        .rbc-toolbar .rbc-btn-group button.rbc-active {
+          background-color: #007bff !important;
+          border-color: #007bff !important;
+        }
       `}
       </style>
     </div>

@@ -254,8 +254,11 @@ const WithdrawalManagementPage = () => {
 		},
 	];
 
+	const [withdrawals, setWithdrawals] = useState(data);
+	const [openDropdownId, setOpenDropdownId] = useState<string | null>(null);
+
 	// ✅ FILTER DATA BY BOTH STATUS AND SEARCH
-	const filteredData = data.filter((item) => {
+	const filteredData = withdrawals.filter((item) => {
 		const matchesTab = activeTab === 'pending'
 			? item.status === 'Pending'
 			: item.status === 'Completed';
@@ -275,6 +278,34 @@ const WithdrawalManagementPage = () => {
 		setCurrentPage(1);
 	}, [activeTab]);
 
+	// ✅ HANDLE STATUS CHANGE
+	const handleStatusChange = (id: string, newStatus: string) => {
+		setWithdrawals(prev =>
+			prev.map(item =>
+				item.id === id ? { ...item, status: newStatus } : item
+			)
+		);
+		setOpenDropdownId(null);
+	};
+
+	// ✅ TOGGLE DROPDOWN
+	const toggleDropdown = (id: string) => {
+		setOpenDropdownId(openDropdownId === id ? null : id);
+	};
+
+	// ✅ CLOSE DROPDOWN WHEN CLICKING OUTSIDE
+	useEffect(() => {
+		const handleClickOutside = (event: MouseEvent) => {
+			const target = event.target as HTMLElement;
+			if (!target.closest('.dropdown')) {
+				setOpenDropdownId(null);
+			}
+		};
+
+		document.addEventListener('click', handleClickOutside);
+		return () => document.removeEventListener('click', handleClickOutside);
+	}, []);
+
 	return (
 		<PageWrapper title='Withdrawal Management'>
 			<SubHeader>
@@ -287,28 +318,26 @@ const WithdrawalManagementPage = () => {
 				<input
 					type='text'
 					placeholder='Search...'
-					className='form-control mb-3 w-25'
+					className='form-control mb-3 w-25 '
 					value={searchTerm}
 					onChange={(e) => {
-								setSearchTerm(e.target.value);
-								setCurrentPage(1);
-							}}
-						/>
+						setSearchTerm(e.target.value);
+						setCurrentPage(1);
+					}}
+				/>
 
 				{/* TABS */}
 				<div className='mb-3'>
 					<button
-						className={`btn me-2 ${
-							activeTab === 'pending' ? 'btn-success' : 'btn-light'
-						}`}
+						className={`btn me-2 ${activeTab === 'pending' ? 'btn-success' : 'btn-light'
+							}`}
 						onClick={() => setActiveTab('pending')}>
 						Pending Withdrawals
 					</button>
 
 					<button
-						className={`btn ${
-							activeTab === 'completed' ? 'btn-secondary' : 'btn-light'
-						}`}
+						className={`btn ${activeTab === 'completed' ? 'btn-secondary' : 'btn-light'
+							}`}
 						onClick={() => setActiveTab('completed')}>
 						Completed Withdrawals
 					</button>
@@ -361,42 +390,53 @@ const WithdrawalManagementPage = () => {
 											{item.status === 'Pending' ? (
 												<div className='dropdown'>
 													<button
-														className='btn btn-sm btn-primary  dropdown-toggle'
-														data-bs-toggle='dropdown'>
-														Pending
+														className='btn btn-sm btn-primary dropdown-toggle'
+														onClick={(e) => {
+															e.preventDefault();
+															toggleDropdown(item.id);
+														}}>
+														{item.status}
 													</button>
 
-													<ul className='dropdown-menu dropdown-menu-dark'>
-														<li>
-															<button className='dropdown-item text-success'>
-																Approve
-															</button>
-														</li>
-														<li>
-															<button className='dropdown-item text-danger'>
-																Reject
-															</button>
-														</li>
-														<li>
-															<button className='dropdown-item'>
-																Mark as Paid
-															</button>
-														</li>
-														<li>
-															<button className='dropdown-item'>
-																Attach TX Hash
-															</button>
-														</li>
-														<li>
-															<button className='dropdown-item'>
-																Add Note
-															</button>
-														</li>
-													</ul>
+													{openDropdownId === item.id && (
+														<ul className='dropdown-menu dropdown-menu-dark show' style={{ position: 'absolute', zIndex: 1000 }}>
+															<li>
+																<button
+																	className='dropdown-item text-success'
+																	onClick={(e) => {
+																		e.preventDefault();
+																		handleStatusChange(item.id, 'Approved');
+																	}}>
+																	<i className='fas fa-check me-2'></i>Approve
+																</button>
+															</li>
+															<li>
+																<button
+																	className='dropdown-item text-danger'
+																	onClick={(e) => {
+																		e.preventDefault();
+																		handleStatusChange(item.id, 'Rejected');
+																	}}>
+																	<i className='fas fa-times me-2'></i>Reject
+																</button>
+															</li>
+															<li>
+																<button
+																	className='dropdown-item text-info'
+																	onClick={(e) => {
+																		e.preventDefault();
+																		handleStatusChange(item.id, 'Completed');
+																	}}>
+																	<i className='fas fa-check-circle me-2'></i> Completed
+																</button>
+															</li>
+															<li><hr className='dropdown-divider' /></li>
+														</ul>
+													)}
 												</div>
 											) : (
 												<span className='badge bg-success'>
-													Completed
+													{item.status}
 												</span>
 											)}
 										</td>
@@ -421,7 +461,7 @@ const WithdrawalManagementPage = () => {
 							currentPage={currentPage}
 							perPage={perPage}
 							setPerPage={setPerPage}
-							// totalCount={filteredData.length}
+						// totalCount={filteredData.length}
 						/>
 					</div>
 				</div>

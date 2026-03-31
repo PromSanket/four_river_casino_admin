@@ -314,7 +314,7 @@ function AffiliateForm({ onCancel, onSave, editItem }: AffiliateFormProps) {
             onChange={(e) => setForm({ ...form, name: e.target.value })}
           />
         </div>
-        <div className="col-md-6">
+        {/* <div className="col-md-6">
           <label className="form-label">Affilate ID</label>
           <input
             placeholder="Affilate ID"
@@ -323,7 +323,7 @@ function AffiliateForm({ onCancel, onSave, editItem }: AffiliateFormProps) {
             disabled={!!editItem}
             onChange={(e) => setForm({ ...form, id: e.target.value })}
           />
-        </div>
+        </div> */}
         <div className="col-md-6">
           <label className="form-label">Email</label>
           <input
@@ -334,7 +334,7 @@ function AffiliateForm({ onCancel, onSave, editItem }: AffiliateFormProps) {
             onChange={(e) => setForm({ ...form, email: e.target.value })}
           />
         </div>
-        <div className="col-md-6">
+        {/* <div className="col-md-6">
           <label className="form-label">Username</label>
           <input
             placeholder="Username"
@@ -342,7 +342,7 @@ function AffiliateForm({ onCancel, onSave, editItem }: AffiliateFormProps) {
             value={form.username}
             onChange={(e) => setForm({ ...form, username: e.target.value })}
           />
-        </div>
+        </div> */}
         <div className="col-md-6">
           <label className="form-label">Telegram Username</label>
           <input

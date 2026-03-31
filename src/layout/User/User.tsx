@@ -12,6 +12,7 @@ import useNavigationItemHandle from '../../hooks/useNavigationItemHandle';
 import AuthContext from '../../contexts/authContext';
 import Popovers from '../../components/bootstrap/Popovers';
 import ThemeContext from '../../contexts/themeContext';
+import UserImage from '../../assets/img/wanna/wanna1.png';
 
 const User = () => {
 	const { width } = useWindowSize();
@@ -34,8 +35,8 @@ const User = () => {
 				onClick={() => setCollapseStatus(!collapseStatus)}>
 				<div className='user-avatar'>
 					<img
-						srcSet={userData?.srcSet}
-						src={userData?.src}
+						srcSet={userData?.srcSet || UserImage}
+						src={userData?.src || UserImage}
 						alt='Avatar'
 						width={128}
 						height={128}
@@ -44,7 +45,7 @@ const User = () => {
 				<div className='user-info'>
 					<div className='user-name'>
 						<Popovers>
-							{`${userData?.name} ${userData?.surname}`}
+							{`${userData?.name || 'John'} ${userData?.surname || 'Doe'}`}
 						</Popovers>
 						{/* <code className='ps-2'>User.tsx</code> */}
 					</div>
