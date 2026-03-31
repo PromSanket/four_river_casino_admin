@@ -148,7 +148,7 @@ const Login: FC<ILoginProps> = ({ isSignUp }) => {
 										'bg-l10-dark': !darkModeStatus,
 										'bg-dark': darkModeStatus,
 									})}>
-									<div className='row row-cols-2 g-3 pb-3 px-3 mt-0'>
+									{/* <div className='row row-cols-2 g-3 pb-3 px-3 mt-0'>
 										<div className='col'>
 											<Button
 												color={darkModeStatus ? 'light' : 'dark'}
@@ -175,12 +175,12 @@ const Login: FC<ILoginProps> = ({ isSignUp }) => {
 												Sign Up
 											</Button>
 										</div>
-									</div>
+									</div> */}
 								</div>
 
 								<LoginHeader isNewUser={singUpStatus} />
 
-								<Alert isLight icon='Lock' isDismissible>
+								{/* <Alert isLight icon='Lock' isDismissible>
 									<div className='row'>
 										<div className='col-12'>
 											<strong>Username:</strong> {USERS.JOHN.username}
@@ -189,7 +189,7 @@ const Login: FC<ILoginProps> = ({ isSignUp }) => {
 											<strong>Password:</strong> {USERS.JOHN.password}
 										</div>
 									</div>
-								</Alert>
+								</Alert> */}
 								<form className='row g-4'>
 									{singUpStatus ? (
 										<>
@@ -314,7 +314,7 @@ const Login: FC<ILoginProps> = ({ isSignUp }) => {
 									)}
 
 									{/* BEGIN :: Social Login */}
-									{!signInPassword && (
+									{/* {!signInPassword && (
 										<>
 											<div className='col-12 mt-3 text-center text-muted'>
 												OR
@@ -346,7 +346,7 @@ const Login: FC<ILoginProps> = ({ isSignUp }) => {
 												</Button>
 											</div>
 										</>
-									)}
+									)} */}
 									{/* END :: Social Login */}
 								</form>
 							</CardBody>

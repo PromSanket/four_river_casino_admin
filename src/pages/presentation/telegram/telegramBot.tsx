@@ -7,10 +7,14 @@ import getDay from 'date-fns/getDay';
 import enUS from 'date-fns/locale/en-US';
 import MDEditor from '@uiw/react-md-editor';
 import Modal from 'react-modal';
+
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import '@uiw/react-md-editor/markdown-editor.css';
 import '@uiw/react-markdown-preview/markdown.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
+
+/* ✅ IMPORTANT FIX */
+Modal.setAppElement('#root');
 
 const locales = {
   'en-US': enUS,
@@ -45,9 +49,10 @@ const TelegramBot = () => {
       channel: 'general',
     },
   ]);
-  
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+
   const [formData, setFormData] = useState({
     title: '',
     content: '',
@@ -91,25 +96,31 @@ const TelegramBot = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     const newEvent: Event = {
       id: events.length + 1,
       title: formData.title,
       start: selectedDate || new Date(),
-      end: new Date((selectedDate || new Date()).getTime() + 60 * 60 * 1000),
+      end: new Date(
+        (selectedDate || new Date()).getTime() + 60 * 60 * 1000
+      ),
       content: formData.content,
       channel: formData.channel,
-      image: formData.image ? URL.createObjectURL(formData.image) : undefined,
+      image: formData.image
+        ? URL.createObjectURL(formData.image)
+        : undefined,
     };
 
-    setEvents([...events, newEvent]);
+    setEvents((prev) => [...prev, newEvent]);
     closeModal();
   };
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      setFormData({ ...formData, image: file });
+    if (e.target.files && e.target.files.length > 0) {
+      setFormData((prev) => ({
+        ...prev,
+        image: e.target.files![0],
+      }));
     }
   };
 
@@ -125,124 +136,157 @@ const TelegramBot = () => {
           <h2>Telegram Bot Event Calendar</h2>
         </div>
         <div className="col-auto">
-          <button 
-            className="btn btn-primary" 
-            onClick={openCreateModal}
-          >
-            <i className="bi bi-plus-circle me-2"></i>
-            Create Event
+          <button className="btn btn-primary" onClick={openCreateModal}>
+            + Create Event
           </button>
         </div>
       </div>
 
-      <div className="row">
-        <div className="col-12">
-          <div style={{ height: 600 }}>
-            <Calendar
-              localizer={localizer}
-              events={events}
-              startAccessor="start"
-              endAccessor="end"
-              onSelectSlot={handleSelectSlot}
-              onSelectEvent={handleSelectEvent}
-              selectable
-              defaultView="month"
-              views={['month', 'week', 'day']}
-              style={{ height: '100%' }}
-            />
-          </div>
-        </div>
+      <div style={{ height: 600 }}>
+        <Calendar
+          localizer={localizer}
+          events={events}
+          startAccessor="start"
+          endAccessor="end"
+          selectable
+          onSelectSlot={handleSelectSlot}
+          onSelectEvent={handleSelectEvent}
+          defaultView="month"
+          views={['month', 'week', 'day']}
+        />
       </div>
 
+      {/* ✅ FIXED MODAL */}
       <Modal
         isOpen={isModalOpen}
         onRequestClose={closeModal}
-        contentLabel="Create/Edit Event"
-        className="modal-dialog modal-lg"
-        style={{
-          overlay: { backgroundColor: 'rgba(0, 0, 0, 0.5)' },
-          content: {
-            position: 'relative',
-            backgroundColor: 'white',
-            borderRadius: '8px',
-            padding: '20px',
-            maxWidth: '800px',
-            margin: 'auto',
-            inset: '50px',
-          },
-        }}
+        shouldCloseOnOverlayClick={false}
+        className="custom-modal"
+        overlayClassName="custom-overlay"
       >
         <div className="modal-header">
-          <h5 className="modal-title">Create/Edit Event</h5>
-          <button type="button" className="btn-close" onClick={closeModal}></button>
+          <h5>Create / Edit Event</h5>
+          <button className="btn-close" onClick={closeModal}></button>
         </div>
-        
+
         <form onSubmit={handleSubmit}>
           <div className="modal-body">
+            {/* TITLE */}
             <div className="mb-3">
-              <label htmlFor="title" className="form-label">Event Title</label>
+              <label className="form-label">Event Title</label>
               <input
                 type="text"
                 className="form-control"
-                id="title"
                 value={formData.title}
-                onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                onChange={(e) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    title: e.target.value,
+                  }))
+                }
                 required
               />
             </div>
 
+            {/* CHANNEL */}
             <div className="mb-3">
-              <label htmlFor="channel" className="form-label">Channel Selection</label>
+              <label className="form-label">Channel</label>
               <select
                 className="form-select"
-                id="channel"
                 value={formData.channel}
-                onChange={(e) => setFormData({ ...formData, channel: e.target.value })}
+                onChange={(e) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    channel: e.target.value,
+                  }))
+                }
               >
-                {channels.map((channel) => (
-                  <option key={channel.value} value={channel.value}>
-                    {channel.label}
+                {channels.map((c) => (
+                  <option key={c.value} value={c.value}>
+                    {c.label}
                   </option>
                 ))}
               </select>
             </div>
 
+            {/* EDITOR */}
             <div className="mb-3">
-              <label htmlFor="content" className="form-label">Content</label>
+              <label className="form-label">Content</label>
               <MDEditor
                 value={formData.content}
-                onChange={(value) => setFormData({ ...formData, content: value || '' })}
+                onChange={(val) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    content: val || '',
+                  }))
+                }
                 height={200}
               />
             </div>
 
+            {/* IMAGE */}
             <div className="mb-3">
-              <label htmlFor="image" className="form-label">Image Upload</label>
+              <label className="form-label">Image</label>
               <input
                 type="file"
                 className="form-control"
-                id="image"
-                accept="image/*"
                 onChange={handleImageUpload}
               />
+
               {formData.image && (
-                <div className="mt-2">
-                  <small className="text-muted">Selected: {formData.image.name}</small>
-                </div>
+                <p className="mt-2 text-success">
+                  Selected: {formData.image.name}
+                </p>
               )}
             </div>
           </div>
 
-          <div className="modal-footer">
-            <button type="button" className="btn btn-secondary" onClick={closeModal}>
+          <div className="modal-footer d-flex justify-content-end gap-2">
+            <button
+              type="button"
+              className="btn btn-secondary"
+              onClick={closeModal}
+            >
               Cancel
             </button>
+
             <button type="submit" className="btn btn-primary">
-              Submit
+              Save Event
             </button>
           </div>
         </form>
       </Modal>
+
+      {/* ✅ REQUIRED CSS FIX */}
+      <style>
+        {`
+        .custom-overlay {
+          position: fixed;
+          inset: 0;
+          background: rgba(0, 0, 0, 0.6);
+          backdrop-filter: blur(12px);
+          -webkit-backdrop-filter: blur(12px);
+          z-index: 9999;
+        }
+
+        .custom-modal {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          background: dark;
+          padding: 20px;
+          width: 800px;
+          max-width: 95%;
+          border-radius: 10px;
+          z-index: 10000;
+        }
+
+        .rbc-calendar {
+          z-index: 0 !important;
+        }
+      `}
+      </style>
     </div>
   );
 };

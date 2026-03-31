@@ -5,6 +5,7 @@ import SubHeader, {
 	SubHeaderLeft,
 } from '../../../layout/SubHeader/SubHeader';
 import { FaEye, FaTrash, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
+import PaginationButtons from '../../../components/PaginationButtons';
 
 export default function PlayerManagement() {
 	const [activeTab, setActiveTab] = useState('stats');
@@ -16,15 +17,17 @@ export default function PlayerManagement() {
 	const [showModal, setShowModal] = useState(false);
 	const [actionType, setActionType] = useState('');
 	const [reason, setReason] = useState('');
+	const [amount, setAmount] = useState('');
+	const [showConfirmModal, setShowConfirmModal] = useState(false);
+	const [pendingAction, setPendingAction] = useState('');
 
-	const [searchTerm, setSearchTerm] = useState('');
 	const [currentPage, setCurrentPage] = useState(1);
-	const rowsPerPage = 5;
-	const indexOfLast = currentPage * rowsPerPage;
-	const indexOfFirst = indexOfLast - rowsPerPage;
+	const [perPage, setPerPage] = useState(5);
+	const [searchTerm, setSearchTerm] = useState('');
 	const [showDeleteModal, setShowDeleteModal] = useState(false);
 	const [playerToDelete, setPlayerToDelete] = useState<any>(null);
 
+	const [showConfirmDialog, setShowConfirmDialog] = useState(false);
 
 	// ✅ Dummy Player List
 	const players = [
@@ -73,16 +76,16 @@ export default function PlayerManagement() {
 		{ date: "2025-01-01", type: "Adjustment", amt: "+1000", reference: "SYS12347" }
 	];
 
-
-
 	const filteredPlayers = players.filter((p) =>
 		p.fullName.toLowerCase().includes(searchTerm.toLowerCase()) ||
 		p.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
 		p.telegram.toLowerCase().includes(searchTerm.toLowerCase())
 	);
 
-	const currentPlayers = filteredPlayers.slice(indexOfFirst, indexOfLast);
-	const totalPages = Math.ceil(filteredPlayers.length / rowsPerPage);
+	const paginatedPlayers = filteredPlayers.slice(
+		(currentPage - 1) * perPage,
+		currentPage * perPage
+	);
 
 	const [isFrozen, setIsFrozen] = useState(false);
 	const [isWithdrawLocked, setIsWithdrawLocked] = useState(false);
@@ -98,21 +101,65 @@ export default function PlayerManagement() {
 	const handleActionClick = (type: string) => {
 		setActionType(type);
 		setReason('');
+		setAmount('');
 		setShowModal(true);
 	};
 
-	const handleConfirm = () => {
+	const handleFreezeToggle = () => {
+		setShowModal(false); // Close any open credit/debit modal
+		setPendingAction('freeze');
+		setShowConfirmModal(true);
+		setActionType(''); // Clear action type when showing freeze confirmation
+	};
+
+	const handleWithdrawLockToggle = () => {
+		setShowModal(false); // Close any open credit/debit modal
+		setPendingAction('withdrawLock');
+		setShowConfirmModal(true);
+		setActionType(''); // Clear action type when showing withdraw lock confirmation
+	};
+
+	const handleConfirmAction = () => {
+		if (pendingAction === 'freeze') {
+			const val = !isFrozen;
+			setIsFrozen(val);
+			console.log("Freeze:", val);
+		} else if (pendingAction === 'withdrawLock') {
+			const val = !isWithdrawLocked;
+			setIsWithdrawLocked(val);
+			console.log("Withdraw Lock:", val);
+		}
+		setShowConfirmModal(false);
+		setPendingAction('');
+	};
+
+	const handleModalConfirm = () => {
 		if ((actionType === 'credit' || actionType === 'debit') && !reason.trim()) {
 			alert('Please enter a reason');
 			return;
 		}
-		console.log('Action:', actionType, 'Reason:', reason);
+		if ((actionType === 'credit' || actionType === 'debit') && !amount.trim()) {
+			alert('Please enter an amount');
+			return;
+		}
 		setShowModal(false);
+		setShowConfirmModal(true);
+		setPendingAction(''); // Clear pending action when showing credit/debit confirmation
+	};
+
+	const handleConfirm = () => {
+		console.log('Action:', actionType, 'Amount:', amount, 'Reason:', reason);
+		setShowConfirmModal(false);
+		setActionType('');
+		setReason('');
+		setAmount('');
+		setPendingAction(''); // Clear pending action after credit/debit confirmation
 	};
 
 	const handleDeleteConfirm = () => {
 		console.log("Deleting:", playerToDelete);
 
+		// API CALL HERE
 		// 👉 API CALL HERE
 
 		setShowDeleteModal(false);
@@ -128,91 +175,124 @@ export default function PlayerManagement() {
 			</SubHeader>
 
 			<Page>
-				{/* ========================= */}
-				{/* ✅ PLAYER LIST VIEW */}
-				{/* ========================= */}
-				{!selectedPlayer && (
-					<div className='card p-3'>
-						<h5>Player List</h5>
-
+				{selectedPlayer && (
+					<div className="d-flex justify-content-between align-items-center mb-3">
 						<input
 							type='text'
 							placeholder='Search...'
-							className='form-control mb-3 w-25'
+							className='form-control w-25'
 							value={searchTerm}
 							onChange={(e) => {
 								setSearchTerm(e.target.value);
 								setCurrentPage(1);
 							}}
 						/>
-						<table className='table'>
-							<thead>
-								<tr>
-									<th>Full Name</th>
-									<th>Telegram</th>
-									<th>Email</th>
-									<th>DOB</th>
-									<th>Created At</th>
-									<th>Status</th>
-									<th>Action</th>
-								</tr>
-							</thead>
+						<button
+							className="btn btn-secondary d-flex align-items-center gap-2"
+							onClick={() => setSelectedPlayer(null)}
+						>
+							<FaChevronLeft />
+							Back
+						</button>
+					</div>
+				)}
 
-							<tbody>
-								{currentPlayers.map((p, i) => (
-									<tr key={i}>
-										<td>{p.fullName}</td>
-										<td>{p.telegram}</td>
-										<td>{p.email}</td>
-										<td>{p.dob}</td>
-										<td>{p.createdAt}</td>
-										<td>
-											<span className={`badge ${p.status === 'Active' ? 'bg-success' : 'bg-secondary'}`}>
-												{p.status}
-											</span>
-										</td>
-										<td>
-											<button
-												className='btn btn-sm btn-info me-2'
-												onClick={() => setSelectedPlayer(p)}
-											>
-												<FaEye />
-											</button>
+				{!selectedPlayer && (
+					<input
+						type='text'
+						placeholder='Search...'
+						className='form-control mb-3 w-25'
+						value={searchTerm}
+						onChange={(e) => {
+							setSearchTerm(e.target.value);
+							setCurrentPage(1);
+						}}
+					/>
+				)}
 
-											<button
-												className='btn btn-sm btn-danger'
-												onClick={() => {
-													setPlayerToDelete(p);
-													setShowDeleteModal(true);
-												}}
-											>
-												<FaTrash />
-											</button>
-										</td>
+				{/* ========================= */}
+				{/* ✅ PLAYER LIST VIEW */}
+				{/* ========================= */}
+				{!selectedPlayer && (
+					<div className='card p-3 bg-dark text-light border-0'>
+						<div className='table-responsive'>
+							<table
+								className='table align-middle text-light'
+								style={{
+									borderCollapse: 'separate',
+									borderSpacing: '0 12px',
+								}}>
+								<thead>
+									<tr style={{ background: '#2a2d33' }}>
+										<th className='py-3'>Full Name</th>
+										<th>Telegram</th>
+										<th>Email</th>
+										<th>DOB</th>
+										<th>Created At</th>
+										<th>Status</th>
+										<th>Action</th>
 									</tr>
-								))}
-							</tbody>
-						</table>
-						<div className='d-flex justify-content-end mt-3'>
-							<button
-								className='btn btn-light me-2'
-								disabled={currentPage === 1}
-								onClick={() => setCurrentPage(currentPage - 1)}
-							>
-								<FaChevronLeft />
-							</button>
+								</thead>
 
-							<span className='align-self-center'>
-								Page {currentPage} of {totalPages}
+								<tbody>
+									{paginatedPlayers.map((p, i) => (
+										<tr
+											key={i}
+											style={{
+												background: '#1f2228',
+												borderRadius: '12px',
+												boxShadow: '0 2px 8px rgba(0,0,0,0.6)',
+											}}>
+											<td className='py-3'>{p.fullName}</td>
+											<td>{p.telegram}</td>
+											<td>{p.email}</td>
+											<td>{p.dob}</td>
+											<td>{p.createdAt}</td>
+											<td>
+												<span className={`badge ${p.status === 'Active' ? 'bg-success' : 'bg-secondary'}`}>
+													{p.status}
+												</span>
+											</td>
+											<td>
+												<button
+													className='btn btn-sm btn-info me-2'
+													onClick={() => setSelectedPlayer(p)}
+												>
+													<FaEye />
+												</button>
+
+												<button
+													className='btn btn-sm btn-danger'
+													onClick={() => {
+														setPlayerToDelete(p);
+														setShowDeleteModal(true);
+													}}
+												>
+													<FaTrash />
+												</button>
+											</td>
+										</tr>
+									))}
+								</tbody>
+							</table>
+						</div>
+
+						{/* ✅ PAGINATION UI */}
+						<div className='d-flex justify-content-between align-items-center mt-3'>
+							<span className='small text-light'>
+								Showing {(currentPage - 1) * perPage + 1} to{' '}
+								{Math.min(currentPage * perPage, filteredPlayers.length)} of{' '}
+								{filteredPlayers.length} items
 							</span>
 
-							<button
-								className='btn btn-light ms-2'
-								disabled={currentPage === totalPages}
-								onClick={() => setCurrentPage(currentPage + 1)}
-							>
-								<FaChevronRight />
-							</button>
+							<PaginationButtons
+								data={filteredPlayers}
+								label='players'
+								setCurrentPage={setCurrentPage}
+								currentPage={currentPage}
+								perPage={perPage}
+								setPerPage={setPerPage}
+							/>
 						</div>
 					</div>
 				)}
@@ -328,11 +408,7 @@ export default function PlayerManagement() {
 												className="form-check-input"
 												type="checkbox"
 												checked={isFrozen}
-												onChange={() => {
-													const val = !isFrozen;
-													setIsFrozen(val);
-													console.log("Freeze:", val);
-												}}
+												onChange={handleFreezeToggle}
 											/>
 										</div>
 									</div>
@@ -368,11 +444,7 @@ export default function PlayerManagement() {
 												className="form-check-input"
 												type="checkbox"
 												checked={isWithdrawLocked}
-												onChange={() => {
-													const val = !isWithdrawLocked;
-													setIsWithdrawLocked(val);
-													console.log("Withdraw Lock:", val);
-												}}
+												onChange={handleWithdrawLockToggle}
 											/>
 										</div>
 									</div>
@@ -481,7 +553,11 @@ export default function PlayerManagement() {
 
 								<div className="d-flex justify-content-end gap-2">
 									<button className="btn btn-light">Cancel</button>
-									<button className="btn btn-success">Confirm Credit</button>
+									<button className="btn btn-success"
+										onClick={() => setShowConfirmDialog(true)}
+									>
+										Confirm Credit
+									</button>
 								</div>
 							</div>
 						</div>
@@ -516,14 +592,6 @@ export default function PlayerManagement() {
 								</tbody>
 							</table>
 						</div>
-
-						{/* BACK */}
-						<button
-							className="btn btn-secondary"
-							onClick={() => setSelectedPlayer(null)}
-						>
-							← Back
-						</button>
 					</>
 				)}
 
@@ -541,24 +609,126 @@ export default function PlayerManagement() {
 
 								<div className="modal-body">
 									<p>Are you sure you want to <b>{actionType}</b> this player?</p>
+									<p>Current Balance: {selectedPlayer?.balance}</p>
 
 									{(actionType === 'credit' || actionType === 'debit') && (
 										<div>
-											<label>Enter Reason</label>
-											<textarea
-												className="form-control"
-												value={reason}
-												onChange={(e) => setReason(e.target.value)}
-											/>
+											<div className="mb-3">
+												<label>Amount ($)</label>
+												<input
+													type="number"
+													className="form-control"
+													placeholder="0.00"
+													value={amount}
+													onChange={(e) => setAmount(e.target.value)}
+												/>
+											</div>
+											<div>
+												<label>Enter Reason</label>
+												<textarea
+													className="form-control"
+													value={reason}
+													onChange={(e) => setReason(e.target.value)}
+												/>
+											</div>
 										</div>
 									)}
 								</div>
 
 								<div className="modal-footer">
 									<button className="btn btn-secondary" onClick={() => setShowModal(false)}>No</button>
+									<button className="btn btn-primary" onClick={handleModalConfirm}>Yes</button>
+								</div>
+
+							</div>
+						</div>
+					</div>
+				)}
+
+				{showConfirmModal && (actionType === 'credit' || actionType === 'debit') && (
+					<div className="modal d-block" style={{ background: 'rgba(0,0,0,0.5)' }}>
+						<div className="modal-dialog modal-dialog-centered">
+							<div className="modal-content">
+								<div className="modal-header">
+									<h5 className="modal-title text-capitalize">
+										{actionType} Confirmation
+									</h5>
+									<button className="btn-close" onClick={() => setShowConfirmModal(false)}></button>
+								</div>
+
+								<div className="modal-body">
+									<p>Are you sure you want to {actionType} this player?</p>
+									<p>Current Balance: {selectedPlayer?.balance}</p>
+									<p>Amount: ${amount}</p>
+									<p>Reason: {reason}</p>
+								</div>
+
+								<div className="modal-footer">
+									<button className="btn btn-secondary" onClick={() => setShowConfirmModal(false)}>No</button>
 									<button className="btn btn-primary" onClick={handleConfirm}>Yes</button>
 								</div>
 
+							</div>
+						</div>
+					</div>
+				)}
+
+				{showConfirmModal && (pendingAction === 'freeze' || pendingAction === 'withdrawLock') && (
+					<div className="modal d-block" style={{ background: 'rgba(0,0,0,0.5)' }}>
+						<div className="modal-dialog modal-dialog-centered">
+							<div className="modal-content">
+								<div className="modal-header">
+									<h5 className="modal-title text-capitalize">
+										{pendingAction === 'freeze' ? 'Freeze Account' : 'Lock Withdrawals'} Confirmation
+									</h5>
+									<button className="btn-close" onClick={() => setShowConfirmModal(false)}></button>
+								</div>
+
+								<div className="modal-body">
+									<p>Are you sure you want to {pendingAction === 'freeze' ? 'freeze' : 'lock withdrawals'} this player?</p>
+								</div>
+
+								<div className="modal-footer">
+									<button className="btn btn-secondary" onClick={() => setShowConfirmModal(false)}>No</button>
+									<button className="btn btn-primary" onClick={handleConfirmAction}>Yes</button>
+								</div>
+
+							</div>
+						</div>
+					</div>
+				)}
+
+				{showConfirmDialog && (
+					<div
+						className="position-fixed top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center"
+						style={{
+							backgroundColor: 'rgba(0,0,0,0.5)',
+							zIndex: 1050,
+						}}
+					>
+						<div className="bg-dark text-light p-4 rounded shadow" style={{ width: '300px' }}>
+							<h5 className="mb-3 text-center">Are you sure?</h5>
+							<p className="text-center">Do you want to confirm credit?</p>
+
+							<div className="d-flex justify-content-end gap-2 mt-4">
+								<button
+									className="btn btn-secondary"
+									onClick={() => setShowConfirmDialog(false)}
+								>
+									No
+								</button>
+
+								<button
+									className="btn btn-success"
+									onClick={() => {
+										setShowConfirmDialog(false);
+
+										// 👉 Your existing confirm logic here
+										console.log('Credit Confirmed');
+									}}
+								>
+									Yes
+								</button>
 							</div>
 						</div>
 					</div>

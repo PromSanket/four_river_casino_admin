@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PageWrapper from '../../../layout/PageWrapper/PageWrapper';
 import Page from '../../../layout/Page/Page';
 import SubHeader, {
 	SubHeaderLeft,
 } from '../../../layout/SubHeader/SubHeader';
+import PaginationButtons from '../../../components/PaginationButtons';
 import { FaEye, FaTrash, FaChevronLeft, FaChevronRight, FaEdit } from 'react-icons/fa';
 
 // Types
@@ -30,10 +31,8 @@ export default function AffiliateManagement() {
   const [showModal, setShowModal] = useState<boolean>(false);
   const [editItem, setEditItem] = useState<Affiliate | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
-  const [currentPage, setCurrentPage] = useState(1);
-  const rowsPerPage = 5;
-  const indexOfLast = currentPage * rowsPerPage;
-  const indexOfFirst = indexOfLast - rowsPerPage;
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [perPage, setPerPage] = useState<number>(5);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [affiliateToDelete, setAffiliateToDelete] = useState<Affiliate | null>(null);
 
@@ -50,14 +49,18 @@ export default function AffiliateManagement() {
 
   const [data, setData] = useState<Affiliate[]>(initialData);
 
+  // ✅ FILTER DATA BY SEARCH
   const filteredAffiliates = data.filter((a) =>
     a.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     a.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
     a.username.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const currentAffiliates = filteredAffiliates.slice(indexOfFirst, indexOfLast);
-  const totalPages = Math.ceil(filteredAffiliates.length / rowsPerPage);
+  // ✅ PAGINATED DATA
+  const paginatedAffiliates = filteredAffiliates.slice(
+    (currentPage - 1) * perPage,
+    currentPage * perPage
+  );
 
   const handleDelete = (affiliate: Affiliate) => {
     setAffiliateToDelete(affiliate);
@@ -97,98 +100,115 @@ export default function AffiliateManagement() {
         {/* ========================= */}
         {!selectedAffiliate && (
           <>
-            <div className='card p-3'>
-              <div className='d-flex justify-content-between align-items-center mb-3'>
-                <h5>Affilate List ({filteredAffiliates.length})</h5>
-                <button
-                  onClick={() => {
-                    setEditItem(null);
-                    setShowModal(true);
-                  }}
-                  className='btn btn-primary'
-                >
-                  + Create new
-                </button>
+            <div className='d-flex justify-content-between align-items-center mb-3'>
+              <h5>Affiliate List ({filteredAffiliates.length})</h5>
+              <button
+                onClick={() => {
+                  setEditItem(null);
+                  setShowModal(true);
+                }}
+                className='btn btn-primary'
+              >
+                + Create new
+              </button>
+            </div>
+
+            <input
+              type='text'
+              placeholder='Search...'
+              className='form-control mb-3 w-25'
+              value={searchTerm}
+              onChange={(e) => {
+                setSearchTerm(e.target.value);
+                setCurrentPage(1);
+              }}
+            />
+            
+            {/* TABLE */}
+            <div className='card p-3 bg-dark text-light border-0'>
+              <div className='table-responsive'>
+                <table
+                  className='table align-middle text-light'
+                  style={{
+                    borderCollapse: 'separate',
+                    borderSpacing: '0 12px',
+                  }}>
+
+                  <thead>
+                    <tr style={{ background: '#2a2d33' }}>
+                      <th className='py-3'>Full Name</th>
+                      <th>Telegram</th>
+                      <th>Email</th>
+                      <th>Rake Share</th>
+                      <th>Created At</th>
+                      <th>Status</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+
+                  <tbody>
+                    {paginatedAffiliates.map((affiliate) => (
+                      <tr
+                        key={affiliate.id}
+                        style={{
+                          background: '#1f2228',
+                          borderRadius: '12px',
+                          boxShadow: '0 2px 8px rgba(0,0,0,0.6)',
+                        }}>
+
+                        <td className='py-3'>{affiliate.name}</td>
+                        <td>{affiliate.telegram}</td>
+                        <td>{affiliate.email}</td>
+                        <td className='fw-semibold text-warning'>
+                          {affiliate.rakeShare}%
+                        </td>
+                        <td>{affiliate.createdAt}</td>
+                        <td>
+                          <span className={`badge ${affiliate.status === 'Active' ? 'bg-success' : 'bg-secondary'}`}>
+                            {affiliate.status}
+                          </span>
+                        </td>
+                        <td>
+                          <button
+                            className='btn btn-sm btn-warning me-2'
+                            onClick={() => {
+                              setEditItem(affiliate);
+                              setShowModal(true);
+                            }}
+                            title='Edit'
+                          >
+                            <FaEdit />
+                          </button>
+                          <button
+                            className='btn btn-sm btn-danger'
+                            onClick={() => handleDelete(affiliate)}
+                            title='Delete'
+                          >
+                            <FaTrash />
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
               </div>
 
-              <input
-                type='text'
-                placeholder='Search...'
-                className='form-control mb-3 w-25'
-                value={searchTerm}
-                onChange={(e) => {
-                  setSearchTerm(e.target.value);
-                  setCurrentPage(1);
-                }}
-              />
-              
-              <table className='table'>
-                <thead>
-                  <tr>
-                    <th>Full Name</th>
-                    <th>Telegram</th>
-                    <th>Email</th>
-                    <th>Rake Share</th>
-                    <th>Created At</th>
-                    <th>Status</th>
-                    <th>Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {currentAffiliates.map((affiliate) => (
-                    <tr key={affiliate.id}>
-                      <td>{affiliate.name}</td>
-                      <td>{affiliate.telegram}</td>
-                      <td>{affiliate.email}</td>
-                      <td>{affiliate.rakeShare}%</td>
-                      <td>{affiliate.createdAt}</td>
-                      <td>
-                        <span className={`badge ${affiliate.status === 'Active' ? 'bg-success' : 'bg-secondary'}`}>
-                          {affiliate.status}
-                        </span>
-                      </td>
-                      <td>
-                        <button
-                          className='btn btn-sm btn-warning me-2'
-                          onClick={() => {
-                            setEditItem(affiliate);
-                            setShowModal(true);
-                          }}
-                          title='Edit'
-                        >
-                          <FaEdit />
-                        </button>
-                        <button
-                          className='btn btn-sm btn-danger'
-                          onClick={() => handleDelete(affiliate)}
-                          title='Delete'
-                        >
-                          <FaTrash />
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-              
-              <div className='d-flex justify-content-end mt-3'>
-                <button
-                  className='btn btn-light me-2'
-                  disabled={currentPage === 1}
-                  onClick={() => setCurrentPage(currentPage - 1)}
-                >
-                  <FaChevronLeft />
-                </button>
-                <span className='align-self-center'>
-                  Page {currentPage} of {totalPages}
+              {/* ✅ PAGINATION UI */}
+              <div className='d-flex justify-content-between align-items-center mt-3'>
+                <span className='small text-light'>
+                  Showing {(currentPage - 1) * perPage + 1} to{' '}
+                  {Math.min(currentPage * perPage, filteredAffiliates.length)} of{' '}
+                  {filteredAffiliates.length} items
                 </span>
-                <button
-                  className='btn btn-light ms-2'
-                  disabled={currentPage === totalPages}
-                  onClick={() => setCurrentPage(currentPage + 1)}
-                >
-                  <FaChevronRight />
-                </button>
+
+                <PaginationButtons
+                  data={filteredAffiliates}
+                  label='affiliates'
+                  setCurrentPage={setCurrentPage}
+                  currentPage={currentPage}
+                  perPage={perPage}
+                  setPerPage={setPerPage}
+                />
               </div>
             </div>
           </>
