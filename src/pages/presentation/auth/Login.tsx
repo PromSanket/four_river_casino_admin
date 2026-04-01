@@ -127,12 +127,12 @@ const Login: FC<ILoginProps> = () => {
 			className={classNames({ 'bg-dark': true })}>
 			<Page className='p-0'>
 				<div className='row h-100 align-items-center justify-content-center'>
-					<div className='col-xl-4 col-lg-6 col-md-8 shadow-3d-container'>
-						<Card className='shadow-3d-dark' data-tour='login-page'>
+					<div className='col-xl-4 col-lg-6 col-md-8 rounded'>
+						<Card className='shadow dark' data-tour='login-page'>
 							<CardBody>
 								<div className='text-center my-5'>
 									<Link
-										to='/'
+										to=''
 										className={classNames(
 											'text-decoration-none  fw-bold display-2',
 											{
@@ -183,17 +183,6 @@ const Login: FC<ILoginProps> = () => {
 											/>
 										</FormGroup>
 									</div>
-									<div className='col-12 text-center'>
-										<Link
-											// to='/forgot-password'
-											to=''
-											className={classNames('text-decoration-none', {
-												'text-light': darkModeStatus,
-												'text-dark': !darkModeStatus,
-											})}>
-											Forgot Password?
-										</Link>
-									</div>
 									<div className='col-12'>
 										<Button
 											type='submit'
@@ -205,22 +194,6 @@ const Login: FC<ILoginProps> = () => {
 								</form>
 							</CardBody>
 						</Card>
-						<div className='text-center'>
-							<a
-								href='/'
-								className={classNames('text-decoration-none me-3', {
-									'link-light': true,
-								})}>
-								Privacy policy
-							</a>
-							<a
-								href='/'
-								className={classNames('link-light text-decoration-none', {
-									'link-light': true,
-								})}>
-								Terms of use
-							</a>
-						</div>
 					</div>
 				</div>
 			</Page>

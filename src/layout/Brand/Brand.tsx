@@ -11,10 +11,10 @@ interface IBrandProps {
 const Brand: FC<IBrandProps> = ({ asideStatus, setAsideStatus }) => {
 	return (
 		<div className='brand'>
-			<div className='brand-logo'>
+			<div className='brand-logo text-center w-100 h-100 mt-1 ml-2 mr-2'>
 				<h1 className='brand-title '>
 					<Link to='/' aria-label='Logo'>
-						<Logo height={32} />
+						<Logo height={50} width={120} />
 					</Link>
 				</h1>
 			</div>
