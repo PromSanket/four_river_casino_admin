@@ -12,7 +12,7 @@ const DashboardPage = () => {
 	// 👉 Temporary static data (later replace with API)
 	const metrics = [
 		{
-			title: 'Pending Deposits',
+			title: 'Total users',
 			value: 12,
 			color: 'primary',
 		},
@@ -32,7 +32,7 @@ const DashboardPage = () => {
 			color: 'success',
 		},
 		{
-			title: 'House Wallet Balance',
+			title: 'House Rake Balance',
 			value: '$12,780',
 			color: 'secondary',
 		},
@@ -40,6 +40,21 @@ const DashboardPage = () => {
 			title: "Today's Rake (USDT)",
 			value: '320 USDT',
 			color: 'danger',
+		},
+		{
+			title: 'Total Affiliate',
+			value: 25,
+			color: '',
+		},
+		{
+			title: 'Total Deposit',
+			value: '$1,20,000',
+			color: '',
+		},
+		{
+			title: 'Total Withdrawals',
+			value: '$80,000',
+			color: '',
 		},
 	];
 
@@ -76,7 +91,7 @@ const DashboardPage = () => {
 				</div>
 
 				{/* OPTIONAL: placeholder for future tables like your screenshot */}
-				<div className='row mt-4'>
+				{/* <div className='row mt-4'>
 					<div className='col-12'>
 						<div className='card'>
 							<div className='card-body'>
@@ -84,7 +99,7 @@ const DashboardPage = () => {
 							</div>
 						</div>
 					</div>
-				</div>
+				</div> */}
 			</Page>
 		</PageWrapper>
 	);

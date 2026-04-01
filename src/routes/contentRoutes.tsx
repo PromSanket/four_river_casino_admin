@@ -6,6 +6,7 @@ import PlayerManagement from '../pages/presentation/playerManagement/playerManag
 import AffiliateManagement from '../pages/presentation/affilateManagement/affilateManagement';
 import SettingsPage from '../pages/presentation/setting/setting';
 import TelegramBot from '../pages/presentation/telegram/telegramBot';
+import ProtectedRoute from '../components/ProtectedRoute/ProtectedRoute';
 
 const LANDING = {
 	DASHBOARD: lazy(() => import('../pages/presentation/dashboard/DashboardPage')),
@@ -25,23 +26,30 @@ const PAGE_LAYOUTS = {
 
 const presentation = [
 	/**
-	 * Landing
+	 * Auth - Default Landing Page
+	 */
+	{
+		path: '/',
+		element: <Login />,
+	},
+	/**
+	 * Dashboard
 	 */
 	{
 		path: dashboardPagesMenu.dashboard.path,
-		element: <LANDING.DASHBOARD />,
+		element: <ProtectedRoute><LANDING.DASHBOARD /></ProtectedRoute>,
 	},
 	{
 		path: '/withdrawal-management',
-		element: <WithdrawalManagementPage />,
+		element: <ProtectedRoute><WithdrawalManagementPage /></ProtectedRoute>,
 	},
 	{
 		path:'/player-management',
-		element:<PlayerManagement />
+		element:<ProtectedRoute><PlayerManagement /></ProtectedRoute>
 	},
 	{
 		path:'/affilate-management',
-		element:<AffiliateManagement />
+		element:<ProtectedRoute><AffiliateManagement /></ProtectedRoute>
 	},
 	{
 		path: '/login',
@@ -49,15 +57,15 @@ const presentation = [
 	},
 	{
 		path: '/sign-up',
-		element: <Login isSignUp />,
+		element: <Login />,
 	},
 	{
 		path:'/setting',
-		element:<SettingsPage />
+		element:<ProtectedRoute><SettingsPage /></ProtectedRoute>
 	},
 	{
 		path:'/telegram-bot',
-		element:<TelegramBot />
+		element:<ProtectedRoute><TelegramBot /></ProtectedRoute>
 	}
 	// {
 	// 	path: demoPagesMenu.page404.path,

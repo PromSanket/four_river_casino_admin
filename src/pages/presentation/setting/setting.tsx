@@ -104,13 +104,13 @@ export default function SettingsPage() {
 
 				{/* Time & Display Settings */}
 				<div className='card mb-3'>
-					<div className='card-header'>
-						<h5 className='mb-0'>Time & Display Settings</h5>
+					<div className='card-header'> 
+						<h5 className='mb-0'>Telegram BOT Settings</h5>
 						<small className='text-muted'>Expiry limits and currency display preferences</small>
 					</div>
 					<div className='card-body'>
 						<div className='row g-3'>
-							<div className='col-md-6'>
+							{/* <div className='col-md-6'>
 								<label className='form-label'>Deposit Intent Expiry Time (Minutes)</label>
 								<div className='input-group'>
 									<input
@@ -137,9 +137,9 @@ export default function SettingsPage() {
 									{/* <button className='btn btn-outline-secondary' type='button'>
 										Sync Live Rate
 									</button> */}
-								</div>
+								{/* </div>
 								<div className='form-text'>Fixed display rate for UI conversion</div>
-							</div>
+							</div> */} 
 
 							<div className='col-md-6'>
 								<label className='form-label'>Community Group Refresh Time (Minutes)</label>

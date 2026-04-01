@@ -308,13 +308,14 @@ const WithdrawalManagementPage = () => {
 
 	return (
 		<PageWrapper title='Withdrawal Management'>
-			<SubHeader>
+			<SubHeader className='mb-3 mt-3 me-0 ms-0'>
 				<SubHeaderLeft>
 					<b>Withdrawal Management</b>
 				</SubHeaderLeft>
 			</SubHeader>
 
-			<Page>
+			<Page container={false} className="p-0">
+			<div className="container-fluid p-0">
 				<input
 					type='text'
 					placeholder='Search...'
@@ -465,6 +466,7 @@ const WithdrawalManagementPage = () => {
 						/>
 					</div>
 				</div>
+			</div>
 			</Page>
 		</PageWrapper>
 	);

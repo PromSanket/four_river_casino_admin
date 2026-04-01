@@ -407,7 +407,7 @@ export const CardFooter = forwardRef<HTMLDivElement, ICardFooterProps>(
 				ref={ref}
 				tag={tag}
 				className={classNames(
-					'card-footer',
+					'card-footer gap-2',
 					{
 						[`card-footer-${size}`]: size,
 						[`card-footer-border-${borderSize}`]: borderSize,

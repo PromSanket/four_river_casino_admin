@@ -5,7 +5,7 @@ import SubHeader, {
 	SubHeaderLeft,
 } from '../../../layout/SubHeader/SubHeader';
 import PaginationButtons from '../../../components/PaginationButtons';
-import { FaEye, FaTrash, FaChevronLeft, FaChevronRight, FaEdit } from 'react-icons/fa';
+import { FaEye, FaTrash, FaChevronLeft, FaChevronRight, FaEdit, FaEyeSlash } from 'react-icons/fa';
 
 // Types
 interface Affiliate {
@@ -17,6 +17,7 @@ interface Affiliate {
   status: string;
   createdAt: string;
   rakeShare: number;
+  password?: string;
 }
 
 interface AffiliateFormProps {
@@ -35,6 +36,8 @@ export default function AffiliateManagement() {
   const [perPage, setPerPage] = useState<number>(5);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [affiliateToDelete, setAffiliateToDelete] = useState<Affiliate | null>(null);
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState('');
 
   // Initial dummy data
   const initialData: Affiliate[] = [
@@ -78,23 +81,28 @@ export default function AffiliateManagement() {
   const handleSave = (item: Affiliate) => {
     if (editItem) {
       setData((prev) => prev.map((d) => (d.id === item.id ? item : d)));
+      setToastMessage('Affiliate updated successfully!');
     } else {
       const newItem = { ...item, id: `AG${Date.now()}`, createdAt: new Date().toISOString().split('T')[0] };
       setData((prev) => [...prev, newItem]);
+      setToastMessage('Created successfully!');
     }
+    setShowToast(true);
+    setTimeout(() => setShowToast(false), 3000);
     setShowModal(false);
     setEditItem(null);
   };
 
   return (
     <PageWrapper title='Affiliate Management'>
-      <SubHeader>
+      <SubHeader className='mb-3 mt-3 me-0 ms-0'>
         <SubHeaderLeft>
           <b>Affiliate Management</b>
         </SubHeaderLeft>
       </SubHeader>
 
-      <Page>
+      <Page container={false} className="p-0">
+        <div className="container-fluid p-0">
         {/* ========================= */}
         {/* ✅ AFFILIATE LIST VIEW */}
         {/* ========================= */}
@@ -223,7 +231,7 @@ export default function AffiliateManagement() {
         {/* Add/Edit Modal */}
         {showModal && (
           <div className="modal d-block" style={{ background: 'rgba(0,0,0,0.5)' }}>
-            <div className="modal-dialog modal-dialog-centered">
+            <div className="modal-dialog modal-dialog-centered modal-lg">
               <div className="modal-content">
                 <div className="modal-header">
                   <h5 className="modal-title">
@@ -283,6 +291,17 @@ export default function AffiliateManagement() {
             </div>
           </div>
         )}
+        {/* Success Toast */}
+        {showToast && (
+          <div className="position-fixed bottom-0 end-0 p-3" style={{ zIndex: 9999 }}>
+            <div className="toast show" role="alert">
+              <div className="toast-body bg-success text-white">
+                {toastMessage}
+              </div>
+            </div>
+          </div>
+        )}
+        </div>
       </Page>
     </PageWrapper>
   );
@@ -298,9 +317,34 @@ function AffiliateForm({ onCancel, onSave, editItem }: AffiliateFormProps) {
       telegram: "",
       status: "Active",
       createdAt: "",
-      rakeShare: 0
+      rakeShare: 0,
+      password: ""
     }
   );
+
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [passwordError, setPasswordError] = useState('');
+
+  const validatePasswords = () => {
+    if (!editItem && (!form.password || !confirmPassword)) {
+      setPasswordError('Password and confirm password are required');
+      return false;
+    }
+    if (!editItem && form.password !== confirmPassword) {
+      setPasswordError('Passwords do not match');
+      return false;
+    }
+    setPasswordError('');
+    return true;
+  };
+
+  const handleSubmit = () => {
+    if (validatePasswords()) {
+      onSave(form);
+    }
+  };
 
   return (
     <div>
@@ -364,6 +408,57 @@ function AffiliateForm({ onCancel, onSave, editItem }: AffiliateFormProps) {
             onChange={(e) => setForm({ ...form, rakeShare: Number(e.target.value) })}
           />
         </div>
+        {!editItem && (
+          <>
+            <div className="col-md-6">
+              <label className="form-label">Password</label>
+              <div className="input-group">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Password"
+                  className="form-control"
+                  value={form.password || ''}
+                  onChange={(e) => {
+                    setForm({ ...form, password: e.target.value });
+                    setPasswordError('');
+                  }}
+                />
+                <button
+                  className="btn btn-outline-secondary"
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  {showPassword ? <FaEyeSlash /> : <FaEye />}
+                </button>
+              </div>
+            </div>
+            <div className="col-md-6">
+              <label className="form-label">Confirm Password</label>
+              <div className="input-group">
+                <input
+                  type={showConfirmPassword ? "text" : "password"}
+                  placeholder="Confirm Password"
+                  className={`form-control ${passwordError ? 'is-invalid' : ''}`}
+                  value={confirmPassword}
+                  onChange={(e) => {
+                    setConfirmPassword(e.target.value);
+                    setPasswordError('');
+                  }}
+                />
+                <button
+                  className="btn btn-outline-secondary"
+                  type="button"
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                >
+                  {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
+                </button>
+              </div>
+              {passwordError && (
+                <div className="text-danger small mt-1">{passwordError}</div>
+              )}
+            </div>
+          </>
+        )}
       </div>
 
       <div className="d-flex justify-content-end mt-3 gap-2">
@@ -371,10 +466,10 @@ function AffiliateForm({ onCancel, onSave, editItem }: AffiliateFormProps) {
           Cancel
         </button>
         <button
-          onClick={() => onSave(form)}
+          onClick={handleSubmit}
           className="btn btn-primary"
         >
-          Save
+          Submit
         </button>
       </div>
     </div>

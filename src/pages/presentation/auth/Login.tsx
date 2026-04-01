@@ -1,5 +1,5 @@
 import React, { FC, startTransition, useCallback, useContext, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { useFormik } from 'formik';
@@ -22,6 +22,10 @@ const Login: FC<ILoginProps> = () => {
 	const { darkModeStatus } = useDarkMode();
 
 	const navigate = useNavigate();
+	const location = useLocation();
+
+	// Get the redirect path from location state or default to dashboard
+	const from = (location.state as any)?.from?.pathname || '/dashboard';
 
 	// Set default credentials in localStorage on component mount
 	useEffect(() => {
@@ -115,7 +119,7 @@ const Login: FC<ILoginProps> = () => {
 			}
 			console.log("Navigating to dashboard...");
 			startTransition(() => {
-				navigate('/');
+				navigate(from, { replace: true });
 			});
 		},
 	});
